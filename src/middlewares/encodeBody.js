@@ -2,6 +2,8 @@ import purge from '../helpers/purge.js'
 import encodeJson from '../helpers/encodeJson.js'
 import responseFromError from '../helpers/responseFromError.js'
 
+const moduleName = 'fetchBaseQuery/middlewares/accessToken'
+
 const getEncodedBody = body => (
     typeof blob === 'string'
     || body instanceof String
@@ -56,7 +58,6 @@ export default (settings = {}) => (query) => async ({ body, headers, ...options 
         ...settings
     }
     let response
-    let status = 0
     try {
         response = await query({
             ...options,
@@ -70,9 +71,12 @@ export default (settings = {}) => (query) => async ({ body, headers, ...options 
         })
     } catch (error) {
         if (options.logErrors) {
-            console.error('fetchBaseQuery/middlewares/accessToken', error)
+            console.error(moduleName, error)
         }
-        return responseFromError(error, status)
+        response = responseFromError(error)
+    }
+    if (options.debug?.encodeBody) {
+        console.log(moduleName, response)
     }
     return response
 }
