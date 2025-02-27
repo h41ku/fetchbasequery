@@ -41,6 +41,16 @@ if (success) {
 }
 ```
 
+Using instance of `Request`:
+
+```js
+// for example inside ServiceWorker
+addEventListener('fetch', evt => {
+    const { request } = evt
+    return evt.respondWith(query({ request }))
+})
+```
+
 It works fine both on frontend and backend sides. For backend side usage Node.js v18+ is required,
 because the middleware `baseQuery` based on `Fetch API`. But it can be replaced with your own
 implementation based on another API (e.g. based on `axios` etc).
