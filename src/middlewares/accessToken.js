@@ -8,21 +8,26 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
         getAccessToken,
         setAccessToken,
         isUnauthorized,
-        getUpdatedAccessToken
+        getUpdatedAccessToken,
+        getAuthorizationHeaders
     } = {
         getAccessToken: (payload) => undefined,
         setAccessToken: (token) => {},
         isUnauthorized: (response) => response.status === 401,
         getUpdatedAccessToken: async (response) => undefined,
+        getAuthorizationHeaders: (accessToken) => (
+            accessToken
+                ? { Authorization: `bearer ${accessToken}` }
+                : {}
+        ),
         ...settings
     }
     let response
     try {
-        const accessToken = getAccessToken(payload)
         response = await query({
             ...options,
             headers: purge({
-                ...(accessToken ? { Authorization: `bearer ${accessToken}` } : {}),
+                ...(getAuthorizationHeaders(getAccessToken(payload))),
                 ...(headers || {})
             })
         })
