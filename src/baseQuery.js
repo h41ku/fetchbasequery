@@ -1,10 +1,13 @@
 import responseFromError from './helpers/responseFromError.js'
 import purge from './helpers/purge.js'
 
+const moduleName = 'fetchBaseQuery/baseQuery'
+
 export default async ({ url: endpoint, request: subject, ...options } = {}) => {
     const {
         baseUrl,
         logErrors,
+        debug,
         ...restOptions
     } = {
         logErrors: false,
@@ -55,9 +58,12 @@ export default async ({ url: endpoint, request: subject, ...options } = {}) => {
         response = await fetch(request)
     } catch (error) {
         if (logErrors) {
-            console.error('fetchBaseQuery/query', error)
+            console.error(moduleName, error)
         }
-        return responseFromError(error)
+        response = responseFromError(error)
+    }
+    if (debug?.baseQuery) {
+        console.log(moduleName, response)
     }
     return response
 }
