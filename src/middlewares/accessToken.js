@@ -1,6 +1,8 @@
 import responseFromError from '../helpers/responseFromError.js'
 import purge from '../helpers/purge.js'
 
+const moduleName = 'fetchBaseQuery/middlewares/accessToken'
+
 export default (settings = {}) => query => async ({ payload, headers, ...options } = {}) => {
     const {
         getAccessToken,
@@ -15,7 +17,6 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
         ...settings
     }
     let response
-    let status = 0
     try {
         const accessToken = getAccessToken(payload)
         response = await query({
@@ -25,7 +26,13 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
                 ...(headers || {})
             })
         })
-        status = response.status
+    } catch (error) {
+        if (options.logErrors) {
+            console.error(moduleName, error)
+        }
+        response = responseFromError(error)
+    }
+    try {
         if (isUnauthorized(response)) {
             setAccessToken(null) // special case to remove access token from storage
         } else {
@@ -36,9 +43,12 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
         }
     } catch (error) {
         if (options.logErrors) {
-            console.error('fetchBaseQuery/middlewares/accessToken', error)
+            console.error(moduleName, error)
         }
-        return responseFromError(error, status)
+        response = responseFromError(error)
+    }
+    if (options.debug?.accessToken) {
+        console.log(moduleName, response)
     }
     return response
 }
