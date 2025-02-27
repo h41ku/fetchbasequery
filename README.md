@@ -19,7 +19,7 @@ const query = fetchBaseQuery({
         accessToken({
             getAccessToken: () => localStorage.getItem('access_token'),
             setAccessToken: (token) => localStorage.setItem('access_token', token),
-            getUpdatedAccessToken: (response) => response.headers.get('X-Access-Token')
+            getUpdatedAccessToken: async (response) => response.headers.get('X-Access-Token')
         }),
         jsonReply(),
         commonReply()
