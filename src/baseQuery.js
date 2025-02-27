@@ -1,7 +1,7 @@
 import responseFromError from './helpers/responseFromError.js'
 import purge from './helpers/purge.js'
 
-export default async ({ url: endpoint, ...options } = {}) => {
+export default async ({ url: endpoint, request: subject, ...options } = {}) => {
     const {
         baseUrl,
         logErrors,
@@ -26,28 +26,33 @@ export default async ({ url: endpoint, ...options } = {}) => {
     const fetchOptions = purge({ method, headers, body, mode, credentials, cache, redirect,
         referrer, referrerPolicy, integrity, keepalive, signal })
     // do request
+    let request
     let response
     try {
-        let url, origin, prefix = '/'
-        if (baseUrl) {
-            const url = new URL(baseUrl)
-            origin = url.origin
-            prefix = url.pathname
+        if (endpoint !== undefined) {
+            let url, origin, prefix = '/'
+            if (baseUrl) {
+                const url = new URL(baseUrl)
+                origin = url.origin
+                prefix = url.pathname
+            }
+            try {
+                url = new URL(endpoint)
+            } catch (error) {
+                url = new URL(
+                    /\/$/.test(prefix) && /^\//.test(endpoint)
+                        ? prefix + endpoint.substring(1)
+                        : prefix + endpoint,
+                    origin
+                )
+            }
+            subject = url
         }
-        try {
-            url = new URL(endpoint)
-        } catch (error) {
-            url = new URL(
-                /\/$/.test(prefix) && /^\//.test(endpoint)
-                    ? prefix + endpoint.substring(1)
-                    : prefix + endpoint,
-                origin
-            )
-        }
-        response = await fetch(url, {
+        request = new Request(subject, {
             ...defaultFetchOptions,
             ...fetchOptions
         })
+        response = await fetch(request)
     } catch (error) {
         if (logErrors) {
             console.error('fetchBaseQuery/query', error)
