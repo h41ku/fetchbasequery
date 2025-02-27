@@ -1,7 +1,5 @@
-export default (error, status = 0) => ({
-    status,
-    error: typeof error === 'string'
-        ? { message: error }
-        : error,
-    headers: new Headers()
-})
+export default (error) => {
+    const response = Response.error()
+    response.error = error
+    return response
+}
