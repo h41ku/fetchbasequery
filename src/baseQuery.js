@@ -1,5 +1,6 @@
 import responseFromError from './helpers/responseFromError.js'
 import purge from './helpers/purge.js'
+import mergeHeaders from './helpers/mergeHeaders.js'
 
 const moduleName = 'fetchBaseQuery/baseQuery'
 
@@ -44,6 +45,8 @@ export default async ({ url: endpoint, request: subject, ...options } = {}) => {
                 )
             }
             subject = url
+        } else if (fetchOptions.headers) {
+            fetchOptions.headers = mergeHeaders(subject.headers, fetchOptions.headers)
         }
         request = new Request(subject, fetchOptions)
         if (debug?.baseQuery) {
