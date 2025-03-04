@@ -2,8 +2,21 @@
 
 Library for easily make HTTP queries without mass of boilerplate code.
 
-Usage
------
+## Installation
+
+NPM:
+
+```sh
+npm install fetchbasequery
+```
+
+PNPM:
+
+```sh
+pnpm add fetchbasequery
+```
+
+## Usage
 
 Build base query function:
 
@@ -11,14 +24,21 @@ Build base query function:
 import fetchBaseQuery, { baseQuery, encodeBody, accessToken, jsonReply, commonReply } from 'fetchbasequery'
 
 const query = fetchBaseQuery({
+    // main options ...
     baseUrl: 'https://api.example.org/v1'
     baseQuery,
     logErrors: true,
+    // add some defaults for `fetch()` ...
+    mode: 'cors',
+    credentials: 'include',
+    cache: 'reload',
+    // middlewares
     middleware: [
         encodeBody(),
         accessToken({
             getAccessToken: () => localStorage.getItem('access_token'),
             setAccessToken: (token) => localStorage.setItem('access_token', token),
+            removeAccessToken: (token) => localStorage.removeItem('access_token'),
             getUpdatedAccessToken: async (response) => response.headers.get('X-Access-Token')
         }),
         jsonReply(),
@@ -54,3 +74,7 @@ addEventListener('fetch', evt => {
 It works fine both on frontend and backend sides. For backend side usage Node.js v18+ is required,
 because the middleware `baseQuery` based on `Fetch API`. But it can be replaced with your own
 implementation based on another API (e.g. based on `axios` etc).
+
+## License
+
+MIT
