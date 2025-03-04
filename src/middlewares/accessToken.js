@@ -7,12 +7,14 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
     const {
         getAccessToken,
         setAccessToken,
+        removeAccessToken,
         isUnauthorized,
         getUpdatedAccessToken,
         getAuthorizationHeaders
     } = {
         getAccessToken: (payload) => undefined,
         setAccessToken: (token) => {},
+        removeAccessToken: () => {},
         isUnauthorized: (response) => response.status === 401,
         getUpdatedAccessToken: async (response) => undefined,
         getAuthorizationHeaders: (accessToken) => (
@@ -39,7 +41,7 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
     }
     try {
         if (isUnauthorized(response)) {
-            setAccessToken(null) // special case to remove access token from storage
+            removeAccessToken()
         } else {
             const updatedAccessToken = await getUpdatedAccessToken(response)
             if (updatedAccessToken) {
