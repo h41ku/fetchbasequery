@@ -17,7 +17,7 @@ export default () => query => async (options) => {
         reply = { status, headers }
     }
     if (options.debug?.commonReply) {
-        console.log(moduleName, reply)
+        console.log(moduleName, { reply })
     }
     return reply
 }

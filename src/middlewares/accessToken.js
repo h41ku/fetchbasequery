@@ -55,7 +55,7 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
         response = responseFromError(error)
     }
     if (options.debug?.accessToken) {
-        console.log(moduleName, response)
+        console.log(moduleName, { response })
     }
     return response
 }

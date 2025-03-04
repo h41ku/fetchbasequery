@@ -76,7 +76,7 @@ export default (settings = {}) => (query) => async ({ body, headers, ...options 
         response = responseFromError(error)
     }
     if (options.debug?.encodeBody) {
-        console.log(moduleName, response)
+        console.log(moduleName, { response })
     }
     return response
 }

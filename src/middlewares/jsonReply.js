@@ -29,7 +29,7 @@ export default (settings = {}) => query => async (options = {}) => {
         }
     }
     if (options.debug?.jsonReply) {
-        console.log(moduleName, reply)
+        console.log(moduleName, { reply })
     }
     return reply
 }
