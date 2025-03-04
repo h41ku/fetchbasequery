@@ -16,12 +16,6 @@ export default async ({ url: endpoint, request: subject, ...options } = {}) => {
             : undefined,
         ...options
     }
-    // default options for `fetch()`
-    const defaultFetchOptions = {
-        method: 'GET',
-        cache: 'reload',
-        credentials: 'include',
-    }
     // extract options which are known by `fetch()`
     const { method, headers, body, mode, credentials, cache, redirect,
         referrer, referrerPolicy, integrity, keepalive, signal } = restOptions
@@ -51,10 +45,10 @@ export default async ({ url: endpoint, request: subject, ...options } = {}) => {
             }
             subject = url
         }
-        request = new Request(subject, {
-            ...defaultFetchOptions,
-            ...fetchOptions
-        })
+        request = new Request(subject, fetchOptions)
+        if (debug?.baseQuery) {
+            console.log(moduleName, { request })
+        }
         response = await fetch(request)
     } catch (error) {
         if (logErrors) {
@@ -63,7 +57,7 @@ export default async ({ url: endpoint, request: subject, ...options } = {}) => {
         response = responseFromError(error)
     }
     if (debug?.baseQuery) {
-        console.log(moduleName, response)
+        console.log(moduleName, { response })
     }
     return response
 }
