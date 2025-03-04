@@ -1,6 +1,7 @@
 import purge from '../helpers/purge.js'
 import encodeJson from '../helpers/encodeJson.js'
 import responseFromError from '../helpers/responseFromError.js'
+import mergeHeaders from '../helpers/mergeHeaders.js'
 
 const moduleName = 'fetchBaseQuery/middlewares/accessToken'
 
@@ -61,12 +62,14 @@ export default (settings = {}) => (query) => async ({ body, headers, ...options 
     try {
         response = await query({
             ...options,
-            headers: purge({
-                'Content-Type': contentType instanceof Function
-                    ? contentType({ body })
-                    : contentType,
-                ...(headers || {})
-            }),
+            headers: mergeHeaders(
+                purge({
+                    'Content-Type': contentType instanceof Function
+                        ? contentType({ body })
+                        : contentType
+                }),
+                headers || {}
+            ),
             body: encodeBody(body)
         })
     } catch (error) {

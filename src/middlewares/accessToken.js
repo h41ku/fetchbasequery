@@ -1,5 +1,6 @@
 import responseFromError from '../helpers/responseFromError.js'
 import purge from '../helpers/purge.js'
+import mergeHeaders from '../helpers/mergeHeaders.js'
 
 const moduleName = 'fetchBaseQuery/middlewares/accessToken'
 
@@ -28,10 +29,10 @@ export default (settings = {}) => query => async ({ payload, headers, ...options
     try {
         response = await query({
             ...options,
-            headers: purge({
-                ...(getAuthorizationHeaders(getAccessToken(payload))),
-                ...(headers || {})
-            })
+            headers: mergeHeaders(
+                purge(getAuthorizationHeaders(getAccessToken(payload))),
+                headers || {}
+            )
         })
     } catch (error) {
         if (options.logErrors) {

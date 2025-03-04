@@ -11,7 +11,7 @@ export type FetchOptions = {
     url: URL | string | undefined,
     request: Request | undefined,
     method: string | undefined,
-    headers: object | undefined,
+    headers: Headers | object | undefined,
     body: string
         | object
         | FormData
