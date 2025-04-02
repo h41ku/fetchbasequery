@@ -27,13 +27,14 @@ const query = fetchBaseQuery({
     // main options ...
     baseUrl: 'https://api.example.org/v1'
     baseQuery,
+    timeout: 10000, // in milliseconds
     logErrors: true,
     // add some defaults for `fetch()` ...
     mode: 'cors',
     credentials: 'include',
     cache: 'reload',
     // middlewares
-    middleware: [
+    middlewares: [
         encodeBody(),
         accessToken({
             getAccessToken: () => localStorage.getItem('access_token'),
@@ -50,7 +51,7 @@ const query = fetchBaseQuery({
 Now get easy to make queries:
 
 ```js
-const response = await query({ url: '/users/me' }) // don't worry about catching errors
+const response = await query({ url: '/users/me', timeout: 3000 }) // don't worry about catching errors
 const { status, success, error } = response
 if (success) {
     setUser(response.data)
@@ -69,6 +70,13 @@ addEventListener('fetch', evt => {
     const { request } = evt
     return evt.respondWith(query({ request }))
 })
+```
+
+Aborting query:
+
+```js
+const promise = query({ url: '/users/me' })
+promise.abort()
 ```
 
 It works fine both on frontend and backend sides. For backend side usage Node.js v18+ is required,
