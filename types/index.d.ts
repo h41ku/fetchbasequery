@@ -1,18 +1,19 @@
 export type DebuggingFlags = {
-    baseQuery: boolean | undefined,
-    encodeBody: boolean | undefined,
-    accessToken: boolean | undefined,
-    jsonReply: boolean | undefined,
-    commonReply: boolean | undefined
+    baseQuery?: boolean,
+    encodeBody?: boolean,
+    accessToken?: boolean,
+    jsonReply?: boolean,
+    commonReply?: boolean
 };
 
 export type FetchOptions = {
-    logErrors: boolean | undefined,
-    url: URL | string | undefined,
-    request: Request | undefined,
-    method: string | undefined,
-    headers: Headers | object | undefined,
-    body: string
+    logErrors?: boolean,
+    url?: URL | string,
+    request?: Request,
+    timeout?: number,
+    method?: string,
+    headers?: Headers | object,
+    body?: string
         | object
         | FormData
         | Blob
@@ -28,28 +29,27 @@ export type FetchOptions = {
         | Uint32Array
         | BigInt64Array
         | BigUint64Array
-        | URLSearchParams
-        | undefined,
-    mode: string | undefined,
-    credentials: string | undefined,
-    cache: string | undefined,
-    redirect: string | undefined,
-    referrer: string | undefined,
-    referrerPolicy: string | undefined,
-    integrity: string | undefined,
-    keepalive: boolean | undefined,
-    signal: AbortSignal | undefined,
-    debug: DebuggingFlags | undefined
+        | URLSearchParams,
+    mode?: string,
+    credentials?: string,
+    cache?: string,
+    redirect?: string,
+    referrer?: string,
+    referrerPolicy?: string,
+    integrity?: string,
+    keepalive?: boolean,
+    signal?: AbortSignal,
+    debug?: DebuggingFlags
 };
 
-export type baseQueryFn = (options: FetchOptions | undefined) => Promise<Response>;
-export type queryFn = (options: FetchOptions | undefined) => Promise<any>;
+export type baseQueryFn = (options?: FetchOptions) => Promise<Response>;
+export type queryFn = (options?: FetchOptions) => Promise<any>;
 export type middlewareFn = (settings: any) => (query: queryFn) => queryFn;
 
 export type FetchBaseQueryOptions = {
-    baseUrl: URL | string  | undefined,
-    baseQuery: baseQueryFn | undefined,
-    middlewares: Array<middlewareFn>
+    baseUrl?: URL | string,
+    baseQuery?: baseQueryFn,
+    middlewares?: Array<middlewareFn>
 };
 
 export const baseQuery: baseQueryFn;
@@ -59,6 +59,6 @@ export const accessToken: middlewareFn;
 export const jsonReply: middlewareFn;
 export const commonReply: middlewareFn;
 
-const fetchBaseQuery: (options: FetchBaseQueryOptions & FetchOptions) => queryFn;
+declare function fetchBaseQuery(options?: FetchBaseQueryOptions & FetchOptions): queryFn;
 
 export default fetchBaseQuery;
