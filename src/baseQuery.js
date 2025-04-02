@@ -4,7 +4,7 @@ import mergeHeaders from './helpers/mergeHeaders.js'
 
 const moduleName = 'fetchBaseQuery/baseQuery'
 
-export default async ({ url: endpoint, request: subject, ...options } = {}) => {
+const baseQuery = async ({ url: endpoint, request: subject, ...options } = {}) => {
     const {
         baseUrl,
         logErrors,
@@ -63,4 +63,18 @@ export default async ({ url: endpoint, request: subject, ...options } = {}) => {
         console.log(moduleName, { response })
     }
     return response
+}
+
+export default ({ timeout, signal, ...options } = {}) => {
+    // construct abort signal
+    const abortController = new AbortController()
+    const abortSignal = AbortSignal.any([
+        abortController.signal,
+        ...(timeout ? [ AbortSignal.timeout(timeout) ] : []),
+        ...(signal ? [ signal ] : [])
+    ])
+    // construct abortable promise
+    const promise = baseQuery({ ...options, signal: abortSignal })
+    promise.abort = () => abortController.abort()
+    return promise
 }
