@@ -6,7 +6,7 @@ import mergeHeaders from '../helpers/mergeHeaders.js'
 const moduleName = 'fetchBaseQuery/middlewares/accessToken'
 
 const getEncodedBody = body => (
-    typeof blob === 'string'
+    typeof body === 'string'
     || body instanceof String
     || body instanceof FormData
     || body instanceof Blob
