@@ -173,8 +173,8 @@ return it's enhanced version. That's all.
 Let's create a simple example:
 
 ```ts
-import type { FetchFunction, AbortablePromise } from '../index.d.ts'
-import fetchBaseQuery from '../index.js';
+import type { FetchFunction, AbortablePromise } from 'fetchbasequery';
+import fetchBaseQuery from 'fetchbasequery';
 
 export type XmlResponse = Response & { document?: XMLDocument };
 
