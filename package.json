@@ -1,19 +1,39 @@
 {
   "name": "fetchbasequery",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Library for easily make HTTP queries without mass of boilerplate code.",
   "type": "module",
   "main": "src/fetchBaseQuery.js",
-  "types": "types/index.d.ts",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./decorators": {
+      "types": "./src/decorators/index.d.ts",
+      "import": "./src/decorators/index.js"
+    },
+    "./middlewares": {
+      "types": "./src/middlewares/index.d.ts",
+      "import": "./src/middlewares/index.js"
+    }
+  },
   "scripts": {
+    "test": "node tests/index.js"
   },
   "keywords": [
-    "fetch", "fetchBaseQuery"
+    "fetch",
+    "fetchBaseQuery",
+    "middleware",
+    "retry",
+    "retryOnError",
+    "retryOn429",
+    "muteErrors",
+    "json"
   ],
-  "author": "h41ku <h41ku.c0de@ya.ru>",
   "license": "MIT",
-  "dependencies": {
-  },
   "devDependencies": {
+    "@types/node": "^26.6.5"
   }
 }
