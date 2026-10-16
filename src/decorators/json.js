@@ -36,8 +36,9 @@ function isPlainObject(value) {
         typeof value === 'object'
         // && value !== null
         && !(value instanceof ArrayBuffer)
+        && !ArrayBuffer.isView(value) // TypedArray or DataView
         && !(value instanceof FormData)
-        && !(value instanceof Blob)
+        && !(value instanceof Blob) // Blob or File
         && !(value instanceof ReadableStream)
         && !(value instanceof URLSearchParams)
     )
