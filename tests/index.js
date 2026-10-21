@@ -4,6 +4,7 @@ import { retryOnError } from "../src/middlewares/retryOnError.js"
 import { retryOn429 } from "../src/middlewares/retryOn429.js"
 import { json } from "../src/decorators/json.js"
 import { sleep } from "../src/utils/sleep.js"
+import { mergeHeaders } from "../src/utils/mergeHeaders.js"
 
 const createFakeFetch = () => {
 
@@ -517,6 +518,43 @@ async function test9() {
     }
 }
 
+async function test10() {
+    {
+        const a = new Headers({
+            'Content-Type': 'text/plain',
+            'Content-Length': '1024',
+        })
+        const b = {
+            'Content-Type': 'text/html',
+            'X-Powered-By': 'mergeHeaders'
+        }
+        const c = mergeHeaders(a, b)
+        if (c.get('content-type') !== 'text/html')
+            throw new Error('E01')
+        if (c.get('content-length') !== '1024')
+            throw new Error('E02')
+        if (c.get('x-powered-by') !== 'mergeHeaders')
+            throw new Error('E03')
+    }
+    {
+        const a = [
+            /** @type {[string, string]} */ (['Content-Type', 'text/plain']),
+            /** @type {[string, string]} */ (['Content-Length', '1024']),
+        ]
+        const b = [
+            /** @type {[string, string]} */ (['Content-Type', 'text/html']),
+            /** @type {[string, string]} */ (['X-Powered-By', 'mergeHeaders']),
+        ]
+        const c = mergeHeaders(a, b)
+        if (c.get('content-type') !== 'text/html')
+            throw new Error('E01')
+        if (c.get('content-length') !== '1024')
+            throw new Error('E02')
+        if (c.get('x-powered-by') !== 'mergeHeaders')
+            throw new Error('E03')
+    }
+}
+
 async function runTests() {
     const allTests = [
         test1,
@@ -528,6 +566,7 @@ async function runTests() {
         test7,
         test8,
         test9,
+        test10,
     ]
     for (const test of allTests) {
         await test()
