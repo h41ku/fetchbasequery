@@ -17,6 +17,10 @@
     "./middlewares": {
       "types": "./src/middlewares/index.d.ts",
       "import": "./src/middlewares/index.js"
+    },
+    "./utils": {
+      "types": "./src/utils/index.d.ts",
+      "import": "./src/utils/index.js"
     }
   },
   "scripts": {

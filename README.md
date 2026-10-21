@@ -285,6 +285,44 @@ console.log('Status:', response.status)
 console.log('Data:', response.data) // decorator also parses body returned as json
 ```
 
+## List of provided utilities
+
+### `mergeHeaders(original: HeadersInit, modifications: HeadersInit): Headers`
+
+This function helps to modify headers inside a middleware or a decorators.
+
+Usage:
+```js
+import { mergeHeaders } from 'fetchbasequery/utils'
+
+// Add to the request a CSRF-token as a custom header `X-CSRF-Token`
+async function useCsrfToken(request, next) {
+    const token = await getCsrfToken() // an abstract function just for example
+    const modifiedHeaders = mergeHeaders(request.headers, { // use utility
+        'X-CSRF-Token': token // add or replace this header
+    })
+    const modifiedRequest = new Request(request, { headers: modifiedHeaders })
+    return await next(modifiedRequest)
+}
+```
+
+### `sleep(delay: number, signal?: AbortSignal): Promise<void>`
+
+Abortable function to make a delay. Returns a promise that resolves after delay or rejects when signal is aborted.
+
+Usage:
+```js
+import { sleep } from 'fetchbasequery/utils'
+
+const ac = new AbortController()
+// ...
+const onClick = (evt) => {
+    ac.abort() // abort sleep by click
+}
+// ...
+await sleep(5000, ac.signal)
+```
+
 ## Testing
 
 Running tests:
@@ -298,8 +336,6 @@ npm run test
 - Chaining methods of `AbortablePromise<T>` (`.then()`, `.catch()` and `.finally()`)
   must returns instance of `AbortablePromise<T>` not pure `Promise<T>`;
 - Add static methods to `AbortablePromise<T>` (`.all()`, `.any()`, `.race()`, etc);
-- Describe and export utility function `sleep()` - abortable sleep function;
-- Add, describe and export utility function `mergeHeaders()` to helps to write a middleware;
 
 ## References
 
